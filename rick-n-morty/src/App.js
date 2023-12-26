@@ -10,6 +10,7 @@ class App extends Component {
     this.state = {
       valorBusqueda: '',
       detallesPersonajes: [],
+      mensajeError: '',
     };
   }
 
@@ -29,9 +30,9 @@ class App extends Component {
             imagen: personaje.image, // Agregar la URL de la imagen
           }));
 
-          this.setState({ detallesPersonajes });
+          this.setState({ detallesPersonajes, mensajeError: '' });
         } else {
-          console.log('No se encontraron resultados.');
+          this.setState({ detallesPersonajes: [], mensajeError: 'No se encontraron resultados.' });
         }
       })
       .catch(error => console.error('Error al consultar la API:', error));
@@ -39,7 +40,7 @@ class App extends Component {
 
   // Función para manejar los datos de búsqueda
   datosBusqueda = (nombre) => {
-    this.setState({ valorBusqueda: nombre }, () => {
+    this.setState({ valorBusqueda: nombre, mensajeError: '' }, () => {
       // Llamada a la API después de actualizar el estado
       this.consultaApi();
     });
@@ -55,6 +56,8 @@ class App extends Component {
         <Buscar datosBusqueda={this.datosBusqueda}></Buscar>
 
         <p id="buscar">Valor de búsqueda: {this.state.valorBusqueda}</p>
+
+        {this.state.mensajeError && <p className="text-danger">{this.state.mensajeError}</p>}
 
         <Results detallesPersonajes={this.state.detallesPersonajes}></Results>
       </div>
